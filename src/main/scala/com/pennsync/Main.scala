@@ -2,31 +2,32 @@ package com.pennsync
 
 import java.io.File
 
-import fr.janalyse.ssh.{SSH, SSHOptions}
+import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 
 object Main extends App {
   if (args.length != 2) {
-    val sshOpt: SSHOptions = SSHOptions("10.215.150.241", "pi", "pi")
-
-    implicit val connec: SSH = new SSH(sshOpt)
-
-    println(connec.pwd)
     println("I need a file name and an ip address doofus!")
   } else {
-    val sshOpt: SSHOptions = SSHOptions("10.215.150.241", "pi", "pi")
+    // 10.215.150.241
+    val sshOpt: SSHOptions = SSHOptions(args(1), "pi", "pi")
 
-    implicit val connec: SSH = new SSH(sshOpt)
+    implicit val sshConnect: SSH = new SSH(sshOpt)
 
-    println(connec.pwd)
+    println(sshConnect.pwd)
 
-    println(args(0))
-    println(args(1))
+    val sftpConnect: SSHFtp = new SSHFtp()
+
+    sftpConnect.send(args(0))
 
     val appDirPath = System.getProperty("user.dir")
 
     val appDir = new File(appDirPath)
 
-    DirList.getFiles(appDir, appDirPath)
+    // List all files in directory
+    //DirList.getFiles(appDir, appDirPath)
+
+    sftpConnect.close()
+    sshConnect.close()
 
   }
 
