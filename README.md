@@ -13,3 +13,6 @@ Arg1 = Pi's IP address
 
 
 AirPennNet Device Password: penn1740wifi
+
+https://github.com/dacr/jassh
+https://github.com/lift/framework/tree/master/core/json
