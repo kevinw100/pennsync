@@ -9,3 +9,7 @@ Instructions:
 
 Arg0 = Local file name (relative to current directory, Ex. "a.docx")
 Arg1 = Pi's IP address
+
+
+
+AirPennNet Device Password: penn1740wifi
