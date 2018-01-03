@@ -11,14 +11,15 @@ object Main extends App {
   if (args.length != 2) {
     println("I need a file name and an ip address doofus!")
 
-    implicit val formats = DefaultFormats
+    implicit val formats : DefaultFormats = DefaultFormats
     val ledgerString = scala.io.Source.fromFile("ledger.json").mkString
+//    val updatedLedger = LedgerFile.createFromOld(ledgerString)
     println(ledgerString)
 
     val ledgerJson = parse(ledgerString)
     val ledgerList: List[MetaFile] = ledgerJson.extract[List[MetaFile]]
 
-    val ledgerMap: Map[String, MetaFile] = ledgerList.map{case x : MetaFile => (x.relativePath, x)}.toMap
+    val ledgerMap: Map[String, MetaFile] = ledgerList.map(metafile => (metafile.relativePath, metafile)).toMap
 
 
     val appDirPath = System.getProperty("user.dir")
@@ -29,7 +30,7 @@ object Main extends App {
     val newMap = DirList.getFiles(appDir, appDirPath, ledgerMap)
 
     println(newMap)
-    val ledgerNewList: List[MetaFile] = newMap.map(_._2).toList
+    val ledgerNewList: List[MetaFile] = newMap.values.toList
     println(ledgerNewList)
 
     val ledgerNewString: String = Serialization.write(ledgerNewList)

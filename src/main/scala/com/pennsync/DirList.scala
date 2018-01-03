@@ -7,7 +7,7 @@ object DirList {
   def getUTCTimeString(time : Long): String = {
     val i: Instant = Instant.ofEpochMilli(time)
     val z: ZonedDateTime = ZonedDateTime.ofInstant(i, ZoneOffset.UTC)
-    return z.format(format.DateTimeFormatter.RFC_1123_DATE_TIME)
+    z.format(format.DateTimeFormatter.RFC_1123_DATE_TIME)
   }
   def getFiles(directory: File, appRoot: String, ledgerMap: Map[String, MetaFile]) : Map[String, MetaFile] = {
     if (directory.exists() && directory.isDirectory()) {
@@ -15,13 +15,11 @@ object DirList {
       var tempMap = ledgerMap
 
       val subFiles : List[File] = directory.listFiles.filter(_.isFile).toList
-
       for (f <- subFiles) {
         val relativePath = f.getPath.split(appRoot)(1)
         val lastModified = f.lastModified()
-
+        tempMap.get(relativePath)
         if (tempMap.contains(relativePath)) {
-
           tempMap.get(relativePath) match {
             case Some(oldFileInfo) => if (lastModified > oldFileInfo.lastUpdateLong) {
               tempMap = tempMap+(relativePath -> MetaFile(relativePath, getUTCTimeString(lastModified), lastModified))
@@ -30,9 +28,8 @@ object DirList {
           }
 
         } else {
-          tempMap = tempMap+(relativePath -> MetaFile(relativePath, getUTCTimeString(lastModified), lastModified))
+          tempMap = tempMap + (relativePath -> MetaFile(relativePath, getUTCTimeString(lastModified), lastModified))
         }
-
       }
 
       val subDirectories : List[File] = directory.listFiles.filter(_.isDirectory).toList
@@ -41,9 +38,9 @@ object DirList {
         tempMap = getFiles(d, appRoot, tempMap)
       }
 
-      return tempMap
+      tempMap
     } else {
-      return ledgerMap
+      ledgerMap
     }
   }
 }
