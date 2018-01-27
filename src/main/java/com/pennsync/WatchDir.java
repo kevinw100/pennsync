@@ -28,7 +28,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+package com.pennsync;
 import java.nio.file.*;
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.LinkOption.*;
@@ -179,18 +179,4 @@ public class WatchDir {
         }
     }
 
-    static void usage() {
-        System.err.println("usage: java WatchDir dir");
-        System.exit(-1);
-    }
-
-    public static void main(String[] args) throws IOException {
-        // parse arguments
-        if (args.length != 1)
-            usage();
-
-        // register directory and process its events
-        Path dir = Paths.get(args[0]);
-        new WatchDir(dir).processEvents();
-    }
 }

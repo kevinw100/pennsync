@@ -2,10 +2,11 @@ package com.pennsync
 
 import java.io.File
 import java.io.PrintWriter
+import java.nio.file.{Path, Paths}
 
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 import net.liftweb.json._
-
+import com.pennsync.WatchDir
 
 object Main extends App {
   if (args.length != 2) {
@@ -55,5 +56,11 @@ object Main extends App {
 
   }
 
+  def createWatchDir(rootDir: Path) = {
+    new WatchDir(rootDir)
+  }
 
+  val rootDir = Paths.get(args(0))
+  val watcher = createWatchDir(rootDir)
+  watcher.processEvents()
 }
