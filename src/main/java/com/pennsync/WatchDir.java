@@ -73,7 +73,7 @@ public class WatchDir {
      * Register the given directory, and all its sub-directories, with the
      * WatchService.
      */
-    private void registerAll(final Path start) throws IOException {
+    private void registerAll(final Path start, List<Path> visited) throws IOException {
         // register directory and sub-directories
         Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
             @Override
@@ -81,10 +81,12 @@ public class WatchDir {
                     throws IOException
             {
                 register(dir);
+                visited.add(dir);
                 return FileVisitResult.CONTINUE;
             }
         });
     }
+
 
     /**
      * Creates a WatchService and registers the given directory
@@ -94,7 +96,8 @@ public class WatchDir {
         this.keys = new HashMap<WatchKey,Path>();
 
         System.out.format("Scanning %s ...\n", dir);
-        registerAll(dir);
+        registerAll(dir, new ArrayList<>());
+
         System.out.println("Done.");
 
         // enable trace after initial registration
@@ -102,9 +105,22 @@ public class WatchDir {
     }
 
     /**
+     * Transforms a list of paths (from adding a directory/file) to make them all "created"
+     * @param created
+     * @return
+     */
+    private List<FileSystemChanges> mapToCreateEvent(List<Path> created){
+        ArrayList<FileSystemChanges> changes = new ArrayList<>();
+        for(Path p : created){
+            changes.add(new CreateEvent(p));
+        }
+        return changes;
+    }
+
+    /**
      * Process all events for keys queued to the watcher
      */
-    void processEvents() {
+    void processEvents(Path baseDir, ClientLedger ledgerInstance) {
         for (;;) {
 
             // wait for key to be signalled
@@ -140,16 +156,28 @@ public class WatchDir {
                 // Different cases for the different events
                 if (kind == ENTRY_CREATE) {
                     System.out.format("%s: %s\n", event.kind().name(), child);
+                    FileSystemChanges createChange = new CreateEvent(child.toAbsolutePath());
+                    List<Path> createdPaths = new ArrayList<Path>();
                     try {
                         if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
-                            registerAll(child);
+                            registerAll(child, createdPaths);
                         }
                     } catch (IOException x) {
-                        // ignore to keep sample readbale
+                        // ignore to keep sample readable
                     }
+                    List<FileSystemChanges> createEvents = mapToCreateEvent(createdPaths);
+                    createEvents.add(createChange);
                     /*
-                     * TODO: Handle file creating in the directory
+                        TODO: Make connection with the server, check to see if created files are in conflict,
+                        TODO: server sends back set of conflicting files
                      */
+
+                    /*
+                        TODO: for each conflicting file, say that you won't be sync-ing the files, and demand a re-name (potential problem where a conflicting file won't be marked as conflicting if the program crashes before a rename)
+                     */
+                    //TODO: Stub this out
+                    List<FileSystemChanges> nonConflicting = new ArrayList<>();
+
 
                 } else if (kind == ENTRY_DELETE) {
                     System.out.format("%s: %s\n", event.kind().name(), child);
@@ -162,7 +190,7 @@ public class WatchDir {
                     /*
                      * TODO: Handle file modification in the directory
                      */
-
+                    FileSystemChanges modifyEvent = new ModifyEvent(child.toAbsolutePath());
                 }
             }
 
