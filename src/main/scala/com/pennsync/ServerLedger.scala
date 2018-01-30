@@ -1,58 +1,70 @@
 package com.pennsync
 
-case class ServerLedger(clientWithMachine: Map[Machine, ClientLedger]){
-  // Maps a File to the machines that are currently tracking it
-  lazy val filesToClients : Map[String, Set[Machine]] = {
-    //Gets all the relative paths stored on the server side
-    def allRelPaths : Set[String] = clientWithMachine.values.flatMap(_.pathsToMetadata).map(_._1).toSet
+import scala.xml.MetaData
 
-    allRelPaths.map(path =>
-      (path,
-        clientWithMachine.filter{case (_, ledger) =>
-        ledger.pathsToMetadata.contains(path)
-      }.keySet)
-    ).toMap
-
-  }
-
-  lazy val clientIpMap : Map[String, ClientLedger] = clientWithMachine.map{case (k, v) => (k.ip, v)}
-  lazy val clientIdMap : Map[Long, ClientLedger] = clientWithMachine.map{case (k,v) => (k.id, v)}
-  lazy val clientIpLookup: Map[String, Machine] = clientWithMachine.map{case (k, _) => (k.ip, k)}
-  lazy val clientIdLookup: Map[Long, Machine] = clientWithMachine.map{case (k, _) => (k.id, k)}
-
-  def getLedgerByClientIp(ip : String) : Option[ClientLedger] = clientIpMap.get(ip)
-  def getLedgerByClientId(id: Int) : Option[ClientLedger] = clientIdMap.get(id)
-
-  def addClient(clientData: Machine, clientLedger: ClientLedger) : ServerLedger = {
-    ServerLedger(clientWithMachine + (clientData -> clientLedger))
-  }
-
-  def removeClient(clientData: Machine) : ServerLedger = ServerLedger(clientWithMachine - clientData)
+/**
+  * Used by the server to track file metadata
+ *
+  * @param pathToDataMap = a mapping from relativePath -> (metadata, clients that track the given file)
+  */
+case class ServerLedger(pathToDataMap: Map[String, (MetaFile, Set[Machine])]){
 
   /**
-    * Updates a client mapping to delete a given item
+    * Used to determine if a machine is already tracking a given file (for conflict checking), below methods should be
+    * called AFTER making sure no conflicts have occurred
     * @param client
-    * @param toDeletePath relative
-    * @return
+    * @param filePath
     */
-  def updateClientByDeletingFile(client: Machine, toDeletePath: String) : ServerLedger = {
-    val tgtLedger : Option[ClientLedger] = clientWithMachine.get(client)
-    val tgtLedgerFiles = tgtLedger.map(_.fileMetaData)
-    val removedLedger = tgtLedgerFiles.map(metafiles => metafiles.filterNot(_ == toDeletePath))
-    removedLedger match{
-      case Some(updatedLedger) => //TODO: Impl
-                                  ???
-      case None => print(s"[WARN] : filePath ${toDeletePath} was not found on machine $client"); this
+  def isClientTracking(client: Machine, filePath: String): Boolean = {
+    val clientsOpt: Option[Set[Machine]] = pathToDataMap.get(filePath).map(_._2)
+    val clientsContainsClientOpt : Option[Boolean] = clientsOpt.map(_.contains(client))
+    clientsContainsClientOpt.getOrElse(false)
+  }
+
+  // Called when an AddEvent occurs client-side (their version considered to be the most recent), can also handle modify
+  def handleClientAdd(client: Machine, metaData: MetaFile) : ServerLedger = {
+    val relPath = metaData.relativePath
+    // orElse occurs when you receive a new file that has never been tracked by a previous machine
+    val (fileData, clients) = pathToDataMap.get(relPath).getOrElse((metaData, Set()))
+    ServerLedger(pathToDataMap + (relPath -> (metaData, (clients + client))))
+  }
+
+  def handleClientUntrack(client: Machine, relPath: String) : ServerLedger = {
+    pathToDataMap.get(relPath) match{
+      case Some((metaData, clients)) =>
+        if((clients - client).size > 0) {
+          ServerLedger(pathToDataMap + (relPath -> (metaData, clients - client)))
+        }
+        else{
+          //Reached when a file has no clients that are tracking it
+          //TODO: write something that deletes the file on the Server's actual FS
+
+          //update the serverledger to no longer track the file
+          ServerLedger(pathToDataMap - relPath)
+        }
+      case None => println(s"[ERROR]: Received request to delete file $relPath, which does not exist on the server side, doing nothing")
+        this
     }
   }
 
-  def updateClientByAddingFile(client: Machine, fileMetaData: MetaFile) : ServerLedger = {
-    val tgtLedger : Option[ClientLedger] = clientWithMachine.get(client)
-    val tgtLedgerFiles = tgtLedger.map(_.fileMetaData)
-    val removedLedger = tgtLedgerFiles.map(metafiles => metafiles :+ fileMetaData)
-    removedLedger match{
-      case Some(updatedLedger) => ServerLedger(clientWithMachine + (client -> ClientLedger(updatedLedger)))
-      case None => print(s"[WARN] : filePath ${fileMetaData.relativePath} was not found on machine $client"); this
+  //Occurs when the client
+  def handleClientModify(client: Machine, metaData: MetaFile) : ServerLedger = {
+    //Should work
+    handleClientAdd(client, metaData)
+  }
+
+  //Called when the client wants to track a file, we should NOT update the MetaFile entry in the server's ledger file
+  def handleClientTrack(client: Machine, relPath: String) : ServerLedger = {
+    pathToDataMap.get(relPath) match {
+      case Some((metadata, clients)) => ServerLedger(pathToDataMap + (relPath -> (metadata, clients + client)))
+      case None => println(s"[ERROR]: Received request to track file $relPath which does not exist server side, making no changes")
+        this
     }
+  }
+
+  // A naive implementation that calls handleClientUntrack to every single file that the server tracks! (Add client is trickier)
+  def removeClient(client: Machine) : ServerLedger = {
+    val relPaths = pathToDataMap.keys
+    relPaths.foldLeft(this)((acc, currPath) => acc.handleClientUntrack(client, currPath))
   }
 }
