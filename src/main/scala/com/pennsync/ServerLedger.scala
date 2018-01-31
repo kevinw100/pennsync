@@ -25,8 +25,9 @@ case class ServerLedger(pathToDataMap: Map[String, (MetaFile, Set[Machine])]){
   def handleClientAdd(client: Machine, metaData: MetaFile) : ServerLedger = {
     val relPath = metaData.relativePath
     // orElse occurs when you receive a new file that has never been tracked by a previous machine
-    val (fileData, clients) = pathToDataMap.get(relPath).getOrElse((metaData, Set()))
-    ServerLedger(pathToDataMap + (relPath -> (metaData, (clients + client))))
+    val clients : Set[Machine] = pathToDataMap.get(relPath).getOrElse((metaData, Set[Machine]()))._2
+    val mappedValue = (metaData, clients + client)
+    ServerLedger(pathToDataMap + (relPath -> mappedValue))
   }
 
   def handleClientUntrack(client: Machine, relPath: String) : ServerLedger = {

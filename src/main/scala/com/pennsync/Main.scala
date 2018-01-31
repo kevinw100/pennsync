@@ -31,47 +31,38 @@ object Main extends App {
   val ledgerDirAbs = Paths.get(args(1)).toRealPath()
   println(s"ledger directory: ${ledgerDirAbs.toString}")
 
-  implicit val formats : Formats = DefaultFormats
 
-  val ledgerParser = {
+  val ledgerPath : String = {
     /**
       * If statement is here because it's possible that
       */
     if(Files.isDirectory(ledgerDirAbs)){
       //Creates [ledger dir]/ledger.json path
-      LedgerParser.create(ledgerDirAbs.resolve("ledger.json").toString)
+      ledgerDirAbs.resolve("ledger.json").toString
     }
     else{
-      LedgerParser.create(ledgerDirAbs.toString)
+      ledgerDirAbs.toString
     }
   }
-  val clientLedger = ClientLedger.create(ledgerParser, syncedDirAbs)
-//  val ledgerString = scala.io.Source.fromFile("ledger.json").mkString
-//
-//  val ledgerJson = parse(ledgerString)
-//  val ledgerList: List[MetaFile] = ledgerJson.extract[List[MetaFile]]
-//
-//  val ledgerMap: Map[String, MetaFile] = ledgerList.map{case x : MetaFile => (x.relativePath, x)}.toMap
 
+  implicit val formats : Formats = DefaultFormats
 
-  val appDirPath = System.getProperty("user.dir")
-
-  val appDir = new File(appDirPath)
-
-  // List all files in directory
-  val newMap = DirList.getFiles(new File(syncedDirAbs.toString), syncedDirAbs.toString, clientLedger.pathsToMetadata)
-
-  val ledgerNewList: List[MetaFile] = newMap.values.toList
-  val ledgerNewString: String = Serialization.write(ledgerNewList)
-
-//  new PrintWriter("ledger.json") { write(ledgerNewString); close }
-
+  val clientLedger = ClientLedger.create(ledgerPath, syncedDirAbs)
+  //Used as a dummy value
+  val clientMachine = Machine(0, "some_default_ip")
 
   def createWatchDir(rootDir: Path) = {
     new WatchDir(rootDir)
   }
 
-  //TODO: uncomment when connected to the pi
+  val serverLedger = clientLedger.pathsToMetadata.values.foldLeft(ServerLedger(Map[String, (MetaFile, Set[Machine])]()))((acc, x) => acc.handleClientAdd(clientMachine, x))
+
+  println(s"The information contained in serverLedger: ${serverLedger.pathToDataMap}")
+
+  LedgerParser.writeToServerFile(serverLedger.pathToDataMap, System.getProperty("user.dir"))
+  println("Finished writing!")
+
+//  TODO: uncomment when connected to the pi
 //  // 10.215.150.241
 //  val sshOpt: SSHOptions = SSHOptions(args(2), "pi", "pi")
 //
@@ -88,8 +79,8 @@ object Main extends App {
 //  sftpConnect.close()
 //  sshConnect.close()
 
-
-  val watcher = createWatchDir(syncedDirAbs)
-  watcher.processEvents(syncedDirAbs, clientLedger)
+//  TODO: Uncomment below
+//  val watcher = createWatchDir(syncedDirAbs)
+//  watcher.processEvents(syncedDirAbs, clientLedger)
 
 }
