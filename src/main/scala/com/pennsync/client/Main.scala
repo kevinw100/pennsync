@@ -1,22 +1,19 @@
-package com.pennsync
+package com.pennsync.client
 
-import java.io.File
-import java.io.PrintWriter
 import java.nio.file.{Files, Path, Paths}
-
-import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 import net.liftweb.json._
+import com.pennsync.server.Machine
 
 /**
   * This is the Client-side main
   */
 object Main extends App {
   // TODO: change these cli arguments (need a way to store ledger outside of synced directory?)
-  def usage() = {
+  def usage() : Unit = {
     var usageString = ""
     for(argstring <- args) usageString +=  argstring + " "
     println(s"ERROR: incorrect number of arguments: $usageString")
-    println("Usage: run [root directory] [path to ledger file (or path to directory where ledger file is to be created)] [server ip]")
+    println("Usage: run [root directory] [path to ledger file (or path to directory where ledger file is to be created)] [com.pennsync.server ip]")
   }
 
   if(args.length != 3){
@@ -54,13 +51,6 @@ object Main extends App {
   def createWatchDir(rootDir: Path) = {
     new WatchDir(rootDir)
   }
-
-  val serverLedger = clientLedger.pathsToMetadata.values.foldLeft(ServerLedger(Map[String, (MetaFile, Set[Machine])]()))((acc, x) => acc.handleClientAdd(clientMachine, x))
-
-  println(s"The information contained in serverLedger: ${serverLedger.pathToDataMap}")
-
-  LedgerParser.writeToServerFile(serverLedger.pathToDataMap, System.getProperty("user.dir"))
-  println("Finished writing!")
 
 //  TODO: uncomment when connected to the pi
 //  // 10.215.150.241

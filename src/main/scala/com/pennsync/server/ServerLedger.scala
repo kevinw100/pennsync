@@ -1,9 +1,9 @@
-package com.pennsync
+package com.pennsync.server
 
-import scala.xml.MetaData
+import com.pennsync.MetaFile
 
 /**
-  * Used by the server to track file metadata
+  * Used by the com.pennsync.server to track file metadata
  *
   * @param pathToDataMap = a mapping from relativePath -> (metadata, clients that track the given file)
   */
@@ -24,8 +24,9 @@ case class ServerLedger(pathToDataMap: Map[String, (MetaFile, Set[Machine])]){
   // Called when an AddEvent occurs client-side (their version considered to be the most recent), can also handle modify
   def handleClientAdd(client: Machine, metaData: MetaFile) : ServerLedger = {
     val relPath = metaData.relativePath
+
     // orElse occurs when you receive a new file that has never been tracked by a previous machine
-    val clients : Set[Machine] = pathToDataMap.get(relPath).getOrElse((metaData, Set[Machine]()))._2
+    val clients : Set[Machine] = pathToDataMap.getOrElse(relPath, (metaData, Set[Machine]()))._2
     val mappedValue = (metaData, clients + client)
     ServerLedger(pathToDataMap + (relPath -> mappedValue))
   }
@@ -43,7 +44,7 @@ case class ServerLedger(pathToDataMap: Map[String, (MetaFile, Set[Machine])]){
           //update the serverledger to no longer track the file
           ServerLedger(pathToDataMap - relPath)
         }
-      case None => println(s"[ERROR]: Received request to delete file $relPath, which does not exist on the server side, doing nothing")
+      case None => println(s"[ERROR]: Received request to delete file $relPath, which does not exist on the com.pennsync.server side, doing nothing")
         this
     }
   }
@@ -54,16 +55,16 @@ case class ServerLedger(pathToDataMap: Map[String, (MetaFile, Set[Machine])]){
     handleClientAdd(client, metaData)
   }
 
-  //Called when the client wants to track a file, we should NOT update the MetaFile entry in the server's ledger file
+  //Called when the client wants to track a file, we should NOT update the MetaFile entry in the com.pennsync.server's ledger file
   def handleClientTrack(client: Machine, relPath: String) : ServerLedger = {
     pathToDataMap.get(relPath) match {
       case Some((metadata, clients)) => ServerLedger(pathToDataMap + (relPath -> (metadata, clients + client)))
-      case None => println(s"[ERROR]: Received request to track file $relPath which does not exist server side, making no changes")
+      case None => println(s"[ERROR]: Received request to track file $relPath which does not exist com.pennsync.server side, making no changes")
         this
     }
   }
 
-  // A naive implementation that calls handleClientUntrack to every single file that the server tracks! (Add client is trickier)
+  // A naive implementation that calls handleClientUntrack to every single file that the com.pennsync.server tracks! (Add client is trickier)
   def removeClient(client: Machine) : ServerLedger = {
     val relPaths = pathToDataMap.keys
     relPaths.foldLeft(this)((acc, currPath) => acc.handleClientUntrack(client, currPath))

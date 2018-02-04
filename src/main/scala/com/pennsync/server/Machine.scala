@@ -1,4 +1,4 @@
-package com.pennsync
+package com.pennsync.server
 
 /**
   * Used by the Server to track each individual client

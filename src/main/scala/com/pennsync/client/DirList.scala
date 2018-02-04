@@ -1,16 +1,18 @@
-package com.pennsync
+package com.pennsync.client
 
 import java.io.File
 import java.time.{Instant, ZoneOffset, ZonedDateTime, format}
+
+import com.pennsync.MetaFile
 
 object DirList {
   def getUTCTimeString(time : Long): String = {
     val i: Instant = Instant.ofEpochMilli(time)
     val z: ZonedDateTime = ZonedDateTime.ofInstant(i, ZoneOffset.UTC)
-    return z.format(format.DateTimeFormatter.RFC_1123_DATE_TIME)
+    z.format(format.DateTimeFormatter.RFC_1123_DATE_TIME)
   }
   def getFiles(directory: File, appRoot: String, ledgerMap: Map[String, MetaFile]) : Map[String, MetaFile] = {
-    if (directory.exists() && directory.isDirectory()) {
+    if (directory.exists() && directory.isDirectory) {
 
       var tempMap = ledgerMap
 
@@ -42,9 +44,9 @@ object DirList {
         tempMap = getFiles(d, appRoot, tempMap)
       }
 
-      return tempMap
+      tempMap
     } else {
-      return ledgerMap
+      ledgerMap
     }
   }
 }
