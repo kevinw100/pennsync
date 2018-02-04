@@ -17,6 +17,7 @@ object DirList {
       val subFiles : List[File] = directory.listFiles.filter(_.isFile).toList
 
       for (f <- subFiles) {
+        print("Current file being traversed: " + f.toString)
         val relativePath = f.getPath.split(appRoot)(1)
         val lastModified = f.lastModified()
 
