@@ -1,0 +1,33 @@
+[0m[[0mdebug[0m] [0m[naha] [0m
+[0m[[0mdebug[0m] [0m[naha] Initial source changes: [0m
+[0m[[0mdebug[0m] [0m[naha] 	removed:Set()[0m
+[0m[[0mdebug[0m] [0m[naha] 	added: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] 	modified: Set(/Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/DirList.scala, /Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/Main.scala)[0m
+[0m[[0mdebug[0m] [0m[naha] Invalidated products: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] External API changes: API Changes: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] Modified binary dependencies: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] Initial directly invalidated sources: Set(/Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/DirList.scala, /Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/Main.scala)[0m
+[0m[[0mdebug[0m] [0m[naha] [0m
+[0m[[0mdebug[0m] [0m[naha] Sources indirectly invalidated by:[0m
+[0m[[0mdebug[0m] [0m[naha] 	product: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] 	binary dep: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] 	external source: Set()[0m
+[0m[[0mdebug[0m] [0mAll initially invalidated sources: Set(/Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/DirList.scala, /Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/Main.scala)[0m
+[0m[[0mdebug[0m] [0m[naha] Initial set of included nodes: Set(/Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/DirList.scala, /Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/src/main/scala/com/pennsync/Main.scala)[0m
+[0m[[0mdebug[0m] [0m[naha] Recompiling all 3 sources: invalidated sources (2) exceeded 50.0% of all sources[0m
+[0m[[0minfo[0m] [0mCompiling 3 Scala sources to /Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/target/scala-2.12/classes...[0m
+[0m[[0mdebug[0m] [0mGetting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.1[0m
+[0m[[0mdebug[0m] [0mGetting org.scala-sbt:compiler-interface:0.13.16:component from component compiler for Scala 2.12.1[0m
+[0m[[0mdebug[0m] [0mRunning cached compiler 6f85b6f1, interfacing (CompilerInterface) with Scala compiler version 2.12.1[0m
+[0m[[0mdebug[0m] [0mCalling Scala compiler with arguments  (CompilerInterface):[0m
+[0m[[0mdebug[0m] [0m	-bootclasspath[0m
+[0m[[0mdebug[0m] [0m	/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home/jre/classes:/Users/kylesu/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.1.jar[0m
+[0m[[0mdebug[0m] [0m	-classpath[0m
+[0m[[0mdebug[0m] [0m	/Users/kylesu/Documents/UPenn/2017_fall/cis400/PennSync/target/scala-2.12/classes:/Users/kylesu/.ivy2/cache/fr.janalyse/janalyse-ssh_2.12/jars/janalyse-ssh_2.12-0.10.3.jar:/Users/kylesu/.ivy2/cache/com.jcraft/jsch/jars/jsch-0.1.54.jar:/Users/kylesu/.ivy2/cache/org.apache.commons/commons-compress/jars/commons-compress-1.14.jar:/Users/kylesu/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.7.25.jar:/Users/kylesu/.ivy2/cache/io.github.andrebeat/scala-pool_2.12/jars/scala-pool_2.12-0.4.0.jar:/Users/kylesu/.ivy2/cache/net.liftweb/lift-json_2.12/jars/lift-json_2.12-3.1.0.jar:/Users/kylesu/.ivy2/cache/org.scala-lang/scalap/jars/scalap-2.12.1.jar:/Users/kylesu/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.12.1.jar:/Users/kylesu/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.12.1.jar:/Users/kylesu/.ivy2/cache/org.scala-lang.modules/scala-xml_2.12/bundles/scala-xml_2.12-1.0.6.jar:/Users/kylesu/.ivy2/cache/com.thoughtworks.paranamer/paranamer/bundles/paranamer-2.8.jar[0m
+[0m[[0mdebug[0m] [0mScala compilation took 5.310384152 s[0m
+[0m[[0mdebug[0m] [0m[naha] New invalidations:[0m
+[0m[[0mdebug[0m] [0m[naha] 	Set()[0m
+[0m[[0mdebug[0m] [0m[naha] Initial set of included nodes: Set()[0m
+[0m[[0mdebug[0m] [0m[naha] Previously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0mdebug[0m] [0m[naha] 	Set()[0m
+[0m[[0mdebug[0m] [0m[naha] All newly invalidated sources after taking into account (previously) recompiled sources:Set()[0m
