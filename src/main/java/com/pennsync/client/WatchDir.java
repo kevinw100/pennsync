@@ -28,7 +28,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package com.pennsync;
+package com.pennsync.client;
+import com.pennsync.client.ClientLedger;
+import com.pennsync.client.CreateEvent;
+import com.pennsync.client.FileSystemChanges;
+import com.pennsync.client.ModifyEvent;
+
 import java.nio.file.*;
 import static java.nio.file.StandardWatchEventKinds.*;
 import static java.nio.file.LinkOption.*;
@@ -168,8 +173,8 @@ public class WatchDir {
                     List<FileSystemChanges> createEvents = mapToCreateEvent(createdPaths);
                     createEvents.add(createChange);
                     /*
-                        TODO: Make connection with the server, check to see if created files are in conflict,
-                        TODO: server sends back set of conflicting files
+                        TODO: Make connection with the com.pennsync.server, check to see if created files are in conflict,
+                        TODO: com.pennsync.server sends back set of conflicting files
                      */
 
                     /*

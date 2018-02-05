@@ -1,7 +1,8 @@
-package com.pennsync
+package com.pennsync.client
 
 import java.nio.file.Path
 
+import com.pennsync.MetaFile
 import net.liftweb.json.Formats
 
 object ClientLedger{

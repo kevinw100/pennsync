@@ -1,9 +1,11 @@
-package com.pennsync
+package com.pennsync.client
 
 import java.io.{File, PrintWriter}
 import java.nio.file.{Files, Path, Paths}
 
-import net.liftweb.json.{DefaultFormats, Formats, Serialization, parse}
+import com.pennsync.MetaFile
+import net.liftweb.json.{Formats, Serialization, parse}
+import com.pennsync.server.Machine
 
 /**
   * Usage: utility functions to parse in ledger files
