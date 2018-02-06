@@ -1,8 +1,10 @@
 package com.pennsync.client
 
 import java.nio.file.{Files, Path, Paths}
+
 import net.liftweb.json._
 import com.pennsync.server.Machine
+import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 
 /**
   * This is the Client-side main
@@ -22,10 +24,10 @@ object Main extends App {
   }
 
   //Finds the absolute path of the synced folder
-  val syncedDirAbs = Paths.get(args(0)).toRealPath()
+  val syncedDirAbs: Path = Paths.get(args(0)).toRealPath()
   println(s"synced Directory: ${syncedDirAbs.toString}")
 
-  val ledgerDirAbs = Paths.get(args(1)).toRealPath()
+  val ledgerDirAbs: Path = Paths.get(args(1)).toRealPath()
   println(s"ledger directory: ${ledgerDirAbs.toString}")
 
 
@@ -46,15 +48,16 @@ object Main extends App {
 
   val clientLedger = ClientLedger.create(ledgerPath, syncedDirAbs)
   //Used as a dummy value
-  val clientMachine = Machine(0, "some_default_ip")
+  val clientMachine: Machine = Machine(0, "some_default_ip")
 
   def createWatchDir(rootDir: Path) = {
     new WatchDir(rootDir)
   }
 
 //  TODO: uncomment when connected to the pi
-//  // 10.215.150.241
-//  val sshOpt: SSHOptions = SSHOptions(args(2), "pi", "pi")
+//  // 10.215.149.8
+//  val sshOpt: SSHOptions = SSHOptions("10.215.149.8", "pi", "pi")
+
 //
 //  implicit val sshConnect: SSH = new SSH(sshOpt)
 //
@@ -72,5 +75,9 @@ object Main extends App {
 //  TODO: Uncomment below
 //  val watcher = createWatchDir(syncedDirAbs)
 //  watcher.processEvents(syncedDirAbs, clientLedger)
+//  watcher.processEvents()
+
+// TODO: Testing WatchDirScala
+  val watcher = new WatchDirScala(syncedDirAbs)
 
 }

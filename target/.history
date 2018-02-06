@@ -1,0 +1,4 @@
+compile
+run
+compile
+run test test 000

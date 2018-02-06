@@ -4,7 +4,7 @@
 		module="pennsync_2.12"
 		revision="1.0"
 		status="integration"
-		publication="20171113232115"
+		publication="20180205204518"
 	>
 		<description>
 		PennSync
@@ -36,5 +36,7 @@
 		<dependency org="org.scala-lang" name="scala-library" rev="2.12.1" conf="scala-tool->default,optional(default);compile->default(compile)"/>
 		<dependency org="fr.janalyse" name="janalyse-ssh_2.12" rev="0.10.3" conf="compile->default(compile)"/>
 		<dependency org="net.liftweb" name="lift-json_2.12" rev="3.1.0" conf="compile->default(compile)"/>
+		<dependency org="io.methvin" name="directory-watcher" rev="0.4.0" conf="compile->default(compile)"/>
+		<dependency org="io.methvin" name="directory-watcher-better-files_2.12" rev="0.4.0" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>

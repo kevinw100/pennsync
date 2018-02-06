@@ -1,4 +1,4 @@
-sbt.ResolveException: unresolved dependency: net.liftweb#lift-json_2.12;3: not found
+sbt.ResolveException: unresolved dependency: io.methvin#directory-watcher-better-files;0.4.0: not found
 	at sbt.IvyActions$.sbt$IvyActions$$resolve(IvyActions.scala:313)
 	at sbt.IvyActions$$anonfun$updateEither$1.apply(IvyActions.scala:191)
 	at sbt.IvyActions$$anonfun$updateEither$1.apply(IvyActions.scala:168)
@@ -49,4 +49,4 @@ sbt.ResolveException: unresolved dependency: net.liftweb#lift-json_2.12;3: not f
 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
 	at java.lang.Thread.run(Thread.java:745)
-[error] (*:ssExtractDependencies) sbt.ResolveException: unresolved dependency: net.liftweb#lift-json_2.12;3: not found
+[error] (*:ssExtractDependencies) sbt.ResolveException: unresolved dependency: io.methvin#directory-watcher-better-files;0.4.0: not found

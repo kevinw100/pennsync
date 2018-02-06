@@ -125,7 +125,8 @@ public class WatchDir {
     /**
      * Process all events for keys queued to the watcher
      */
-    void processEvents(Path baseDir, ClientLedger ledgerInstance) {
+    //void processEvents(Path baseDir, ClientLedger ledgerInstance) {
+    void processEvents() {
         for (;;) {
 
             // wait for key to be signalled
