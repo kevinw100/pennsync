@@ -12,5 +12,5 @@ libraryDependencies ++= Seq(
   "io.methvin" %% "directory-watcher-better-files" % "0.4.0"
 )
 
-mainClass in assembly := Some("com.pennsync.Main")
+mainClass in assembly := Some("com.pennsync.client.Main")
 

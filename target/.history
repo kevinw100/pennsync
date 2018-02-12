@@ -2,3 +2,21 @@ compile
 run
 compile
 run test test 000
+compile
+run
+run ../garbageDir ../garbageDir 1
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/yy/zbxd9dms20j52m2tn9b89xm40000gn/T/sbt-structure.xml
+compile
+run ../garbageDir ../garbageDir 1234
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/yy/zbxd9dms20j52m2tn9b89xm40000gn/T/sbt-structure.xml
+compile
+run ../garbageDir ../garbageDir 123
+compile
+run ../garbageDir ../garbageDir 21
+assembly
+run 
+run ../garbageDir ../garbageDir 21
+;reload; set _root_.org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers" ;*/*:dumpStructureTo /private/var/folders/yy/zbxd9dms20j52m2tn9b89xm40000gn/T/sbt-structure.xml
+assembly
+assemble
+assembly
