@@ -80,4 +80,6 @@ object Main extends App {
 // TODO: Testing WatchDirScala
   val watcher = new WatchDirScala(syncedDirAbs)
 
+  while(1>0){}
+
 }
