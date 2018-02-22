@@ -8187,11 +8187,7 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/target/streams/test/test/$global/streams/out" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/target/streams/test/unmanagedClasspath/$global/streams/export" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/target/streams/test/unmanagedJars/$global/streams/export" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules/pennsync.iml" afterPath="$PROJECT_DIR$/.idea/modules/pennsync.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.sbt" afterPath="$PROJECT_DIR$/build.sbt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/main/scala/META-INF/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/com/pennsync/client/Main.scala" afterPath="$PROJECT_DIR$/src/main/scala/com/pennsync/client/Main.scala" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -8221,8 +8217,8 @@
       <file leaf-file-name="WatchDirScala.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/com/pennsync/client/WatchDirScala.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="25" column="22" lean-forward="false" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+            <state relative-caret-position="105">
+              <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding>
                 <element signature="e#29#54#0" expanded="true" />
               </folding>
@@ -8574,7 +8570,21 @@
       <option name="project" value="LOCAL" />
       <updated>1519335896473</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Testing WatchDirScala using https://github.com/gmethvin/directory-watcher instead of native Java implementation.&#10;&#10;Currently running into issues when building artifacts from intelliJ.&#10;Generated jar is looking for Main in com.PennSync when artifact settings specify Main is in com.PennSync.client">
+      <created>1519336560237</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1519336560237</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Testing WatchDirScala using https://github.com/gmethvin/directory-watcher instead of native Java implementation.&#10;&#10;Currently running into issues when building artifacts from intelliJ.&#10;Generated jar is looking for Main in com.PennSync when artifact settings specify Main is in com.PennSync.client">
+      <created>1519336600345</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1519336600345</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -8988,8 +8998,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/com/pennsync/client/WatchDirScala.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="22" lean-forward="false" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
+        <state relative-caret-position="105">
+          <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding>
             <element signature="e#29#54#0" expanded="true" />
           </folding>
