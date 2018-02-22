@@ -9,9 +9,9 @@ import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 class WatchDirScala(dirPath: Path) {
   val watchDir = File(dirPath)
 
-  def sendSSH(fileName: String): Unit = {
+  def sendSSH(file: better.files.File): Unit = {
     // 10.215.149.8
-    val sshOpt: SSHOptions = SSHOptions("10.215.149.8", "pi", "pi")
+    val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
 
     implicit val sshConnect: SSH = new SSH(sshOpt)
 
@@ -19,16 +19,18 @@ class WatchDirScala(dirPath: Path) {
 
     val sftpConnect: SSHFtp = new SSHFtp()
 
-    sftpConnect.send(fileName)
+    println(file.name)
+
+    sftpConnect.send(file.toJava, file.name)
 
     sftpConnect.close()
     sshConnect.close()
   }
 
   val watcher = new RecursiveFileMonitor(watchDir) {
-    override def onCreate(file: File, count: Int) = sendSSH(file.name)
-    override def onModify(file: File, count: Int) = println(s"$file got modified $count times")
-    override def onDelete(file: File, count: Int) = println(s"$file got deleted")
+    override def onCreate(file: better.files.File, count: Int) = sendSSH(file)
+    override def onModify(file: better.files.File, count: Int) = println(s"$file got modified $count times")
+    override def onDelete(file: better.files.File, count: Int) = println(s"$file got deleted")
   }
 
   import scala.concurrent.ExecutionContext.Implicits.global
