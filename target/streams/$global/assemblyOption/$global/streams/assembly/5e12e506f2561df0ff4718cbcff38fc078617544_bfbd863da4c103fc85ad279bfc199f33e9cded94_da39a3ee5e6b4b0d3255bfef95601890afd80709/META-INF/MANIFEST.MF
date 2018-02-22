@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: scala-pool
-Implementation-Version: 0.4.0
-Specification-Vendor: io.github.andrebeat
-Specification-Title: scala-pool
-Implementation-Vendor-Id: io.github.andrebeat
-Specification-Version: 0.4.0
-Implementation-Vendor: io.github.andrebeat
-
