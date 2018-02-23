@@ -5,7 +5,6 @@ import java.nio.file.{Path, Paths}
 import better.files.File
 import com.pennsync.MetaFile
 import io.methvin.better.files._
-import java.io
 
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 
@@ -30,7 +29,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     MetaFile(relPath.toString, lastModified, lastModifiedLong)
   }
 
-  def handleCreate(file: File): Unit ={
+  def handleCreate(file: better.files.File): Unit ={
     val fileMetaData = getMetaData(file)
     Client.addToLedger(fileMetaData)
     serverConnection.sendFile(fileMetaData)
@@ -50,9 +49,9 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
   }
 
   val watcher = new RecursiveFileMonitor(watchDir) {
-    override def onCreate(file: File, count: Int) = handleCreate(file)
-    override def onModify(file: File, count: Int) = println(s"$file got modified $count times")
-    override def onDelete(file: File, count: Int) = println(s"$file got deleted")
+    override def onCreate(file: better.files.File, count: Int) = handleCreate(file)
+    override def onModify(file: better.files.File, count: Int) = println(s"$file got modified $count times")
+    override def onDelete(file: better.files.File, count: Int) = println(s"$file got deleted")
   }
 
   def start() : Unit = {

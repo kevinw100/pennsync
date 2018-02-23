@@ -1,5 +1,7 @@
 package com.pennsync.client
 
+import java.nio.file.Path
+
 import com.pennsync.MetaFile
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 
@@ -15,7 +17,7 @@ class ServerConnection(options: SSHOptions){
 
   def mapToServerPath(relPath: String) : String = {
     //TODO: Use nio paths to properly augment
-    relPath
+    "pending/" ++ relPath
   }
 
   def sendFile(metaData: MetaFile) : Unit = {
@@ -25,6 +27,7 @@ class ServerConnection(options: SSHOptions){
       return
     }
     val serverPath = mapToServerPath(metaData.relativePath)
+    // Modify to send javafile .toFile
     sftp.send(serverPath)
     //TODO: Send HTTPRequest to tell Server that file has completed sending and Server will then check Client JSON
   }

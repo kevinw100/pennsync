@@ -58,30 +58,13 @@ object Main extends App {
     new WatchDir(rootDir)
   }
 
-//  TODO: uncomment when connected to the pi
-//  // 10.215.149.8
-//  val sshOpt: SSHOptions = SSHOptions("10.215.149.8", "pi", "pi")
-
-//
-//  implicit val sshConnect: SSH = new SSH(sshOpt)
-//
-//  println(sshConnect.pwd)
-//
-//  val sftpConnect: SSHFtp = new SSHFtp()
-//
-//  sftpConnect.send(args(0))
-//
-//
-//
-//  sftpConnect.close()
-//  sshConnect.close()
 
 //  TODO: Uncomment below
 //  val watcher = createWatchDir(syncedDirAbs)
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("10.215.151.112", "pi", "pi")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala

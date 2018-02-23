@@ -19,6 +19,7 @@ object Client {
 
   def addToLedger(meta: MetaFile) : Unit = {
     clientLedger = clientLedger.addFile(meta)
+    clientLedger.write()
   }
 
   def removeFromLedger(meta: MetaFile) : Unit = {

@@ -16,7 +16,9 @@ object ClientLedger{
     ClientLedger(fromFS ++ fromLedger, ledgerPath)
   }
 }
+
 case class ClientLedger(pathsToMetadata: Map[String, MetaFile], ledgerPath: String)(implicit format: Formats){
+
   lazy val fileMetaData = pathsToMetadata.values.toList
   def addFile(metadata: MetaFile) : ClientLedger = {
     if(pathsToMetadata.contains(metadata.relativePath)){

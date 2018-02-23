@@ -1,4 +1,6 @@
 out/
 build/
-target/
+project/target/
 .idea/
+target/
+project/META-INF/
