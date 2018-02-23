@@ -21,31 +21,26 @@ object WatchDirScala{
 class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
   val watchDir = File(baseDir)
 
-  def getMetaData(file: java.io.File) : MetaFile = {
-    val child = Paths.get(file.toString).toAbsolutePath
-    val childFile : java.io.File = new java.io.File(child.toString)
-    val relPath = baseDir.relativize(child)
-    val lastModifiedLong = childFile.lastModified()
-    val lastModified = DirList.getUTCTimeString(lastModifiedLong)
-    MetaFile(relPath.toString, lastModified, lastModifiedLong)
-  }
+
 
   def handleCreate(file: better.files.File): Unit = {
-    val fileMetaData = getMetaData(file.toJava)
+    val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.addToLedger(fileMetaData)
     serverConnection.sendFile(fileMetaData, file.toJava)
     //TODO: STUB FOR SENDING FILE TO SERVER
   }
 
   def handleModify(file: better.files.File) : Unit = {
-    val fileMetaData = getMetaData(file.toJava)
+    val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.modifyLedgerEntry(fileMetaData)
-    serverConnection.sendFile(fileMetaData, file.toJava)
+    if (!ClientLedger.isIgnoredFile(fileMetaData.relativePath)) {
+      serverConnection.sendFile(fileMetaData, file.toJava)
+    }
     // TODO: Send file over to server and do ledger checking
   }
 
   def handleDelete(file: better.files.File) : Unit = {
-    val fileMetaData = getMetaData(file.toJava)
+    val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.removeFromLedger(fileMetaData)
     //TODO: Send untrack command to the server
   }
