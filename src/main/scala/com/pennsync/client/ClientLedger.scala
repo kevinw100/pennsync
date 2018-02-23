@@ -9,8 +9,8 @@ object ClientLedger{
 
   //Formats used to do ledgerParser tasks
   def create(ledgerPath: String, syncDir: Path)(implicit format: Formats): ClientLedger = {
-    val fromLedger = LedgerParser.fromClientLedgerFile(ledgerPath)
-    val fromFS = LedgerParser.getFilesFromSyncDir(syncDir)
+    val fromLedger: Map[String, MetaFile] = LedgerParser.fromClientLedgerFile(ledgerPath)
+    val fromFS: Map[String, MetaFile] = LedgerParser.getFilesFromSyncDir(syncDir)
 
     //fromLedger AFTER fromFS b/c fromLedger metadata is MORE accurate than fromFS (want to take info from ledger Over info from FS)
     ClientLedger(fromFS ++ fromLedger, ledgerPath)
