@@ -17,6 +17,7 @@ object ClientLedger{
   }
 }
 
+
 case class ClientLedger(pathsToMetadata: Map[String, MetaFile], ledgerPath: String)(implicit format: Formats){
 
   lazy val fileMetaData = pathsToMetadata.values.toList
