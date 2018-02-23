@@ -64,7 +64,7 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("10.215.151.112", "pi", "pi")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala

@@ -21,7 +21,7 @@ object WatchDirScala{
 class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
   val watchDir = File(baseDir)
 
-  def getMetaData(file: File) : MetaFile = {
+  def getMetaData(file: better.files.File) : MetaFile = {
     val child = file.path
     val childFile : java.io.File = new java.io.File(child.toString)
     val relPath = baseDir.relativize(child)
@@ -30,20 +30,21 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     MetaFile(relPath.toString, lastModified, lastModifiedLong)
   }
 
-  def handleCreate(file: better.files.File): Unit ={
+  def handleCreate(file: better.files.File): Unit = {
     val fileMetaData = getMetaData(file)
     Client.addToLedger(fileMetaData)
-    serverConnection.sendFile(fileMetaData)
+    serverConnection.sendFile(fileMetaData, file.toJava)
     //TODO: STUB FOR SENDING FILE TO SERVER
   }
 
-  def handleModify(file: File) : Unit = {
+  def handleModify(file: better.files.File) : Unit = {
     val fileMetaData = getMetaData(file)
     Client.modifyLedgerEntry(fileMetaData)
+    serverConnection.sendFile(fileMetaData, file.toJava)
     // TODO: Send file over to server and do ledger checking
   }
 
-  def handleDelete(file: File) : Unit = {
+  def handleDelete(file: better.files.File) : Unit = {
     val fileMetaData = getMetaData(file)
     Client.removeFromLedger(fileMetaData)
     //TODO: Send untrack command to the server
@@ -51,7 +52,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
 
   val watcher = new RecursiveFileMonitor(watchDir) {
     override def onCreate(file: better.files.File, count: Int) = handleCreate(file)
-    override def onModify(file: better.files.File, count: Int) = println(s"$file got modified $count times")
+    override def onModify(file: better.files.File, count: Int) = handleModify(file)
     override def onDelete(file: better.files.File, count: Int) = println(s"$file got deleted")
   }
 
