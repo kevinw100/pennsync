@@ -4,7 +4,7 @@
 		module="pennsync$sources_2.12"
 		revision="1.0"
 		status="integration"
-		publication="20180212165504"
+		publication="20180222165523"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>

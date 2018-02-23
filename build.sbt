@@ -14,3 +14,6 @@ libraryDependencies ++= Seq(
 
 mainClass in assembly := Some("com.pennsync.client.Main")
 
+fork in run := true
+outputStrategy := Some(StdoutOutput)
+connectInput in run := true

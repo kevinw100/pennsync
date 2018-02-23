@@ -4636,7 +4636,7 @@
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] fr.janalyse#janalyse-ssh_2.12;0.10.3!janalyse-ssh_2.12.jar(src)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] org.scala-lang#scala-library;2.12.1!scala-library.jar(src)[0m
 [0m[[0mdebug[0m] [0m	[NOT REQUIRED] jline#jline;2.14.1!jline.jar(src)[0m
-[0m[[0mdebug[0m] [0m:: resolution report :: resolve 2368ms :: artifacts dl 53ms[0m
+[0m[[0mdebug[0m] [0m:: resolution report :: resolve 1130ms :: artifacts dl 19ms[0m
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 compile produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-compile.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 runtime produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-runtime.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 test produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-test.xml[0m
@@ -4650,4 +4650,4 @@
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 docs produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-docs.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 pom produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-pom.xml[0m
 [0m[[0mdebug[0m] [0m	report for default#pennsync$sources_2.12;1.0 scala-tool produced in /Users/kevin/projects/pennsync/target/scala-2.12/resolution-cache/reports/default-pennsync$sources_2.12-scala-tool.xml[0m
-[0m[[0mdebug[0m] [0m	resolve done (2368ms resolve - 53ms download)[0m
+[0m[[0mdebug[0m] [0m	resolve done (1130ms resolve - 19ms download)[0m

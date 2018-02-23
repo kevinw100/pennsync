@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="test"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20180212165504"/>
+		date="20180222165523"/>
 	<dependencies>
 		<module organisation="fr.janalyse" name="janalyse-ssh_2.12">
 			<revision name="0.10.3" status="release" pubdate="20171005171204" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/dacr/jassh" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="18">

@@ -10,12 +10,12 @@ object ServerConnection{
 }
 
 class ServerConnection(options: SSHOptions){
-  implicit val ssh: SSH = null // new SSH(options)
-  val sftp: SSHFtp = null // new SSHFtp()
+  implicit val ssh: SSH = new SSH(options)
+  val sftp: SSHFtp = new SSHFtp()
 
   def mapToServerPath(relPath: String) : String = {
     //TODO: Use nio paths to properly augment
-    "pending/" ++ relPath
+    relPath
   }
 
   def sendFile(metaData: MetaFile) : Unit = {

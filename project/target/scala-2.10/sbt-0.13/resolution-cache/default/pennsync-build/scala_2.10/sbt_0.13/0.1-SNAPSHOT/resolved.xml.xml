@@ -4,7 +4,7 @@
 		module="pennsync-build"
 		revision="0.1-SNAPSHOT"
 		status="integration"
-		publication="20180212165756"
+		publication="20180222165649"
 		e:sbtVersion="0.13" e:scalaVersion="2.10"
 	>
 		<description>

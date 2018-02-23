@@ -5,7 +5,7 @@ import java.nio.file.{Files, Path, Paths}
 import net.liftweb.json._
 import com.pennsync.server.Machine
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
-
+import scala.io.StdIn.readLine
 /**
   * This is the Client-side main
   */
@@ -81,15 +81,20 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("10.215.149.8", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala
   val watcher = new WatchDirScala(syncedDirAbs)
   watcher.start()
 
-  while(1 > 0){}
-
+  while({
+    val a = readLine("type q to quit")
+    a != null && (a == "q\n" || a == "q")
+  }){
+    //do nothing
+  }
+  System.exit(0)
 //  sftpConnect.close()
 //  sshConnect.close()
 }
