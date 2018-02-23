@@ -23,6 +23,8 @@ object Main extends App {
     System.exit(0)
   }
 
+  //TODO: Refactor so that this code all ends up in the Client class
+
   //Finds the absolute path of the synced folder
   val syncedDirAbs: Path = Paths.get(args(0)).toRealPath()
   println(s"synced Directory: ${syncedDirAbs.toString}")
@@ -50,36 +52,27 @@ object Main extends App {
   //Used as a dummy value
   val clientMachine: Machine = Machine(0, "some_default_ip")
 
+  Client.setClientLedger(clientLedger)
+
   def createWatchDir(rootDir: Path) = {
     new WatchDir(rootDir)
   }
 
-//  TODO: uncomment when connected to the pi
-//  // 10.215.149.8
-//  val sshOpt: SSHOptions = SSHOptions("10.215.149.8", "pi", "pi")
-
-//
-//  implicit val sshConnect: SSH = new SSH(sshOpt)
-//
-//  println(sshConnect.pwd)
-//
-//  val sftpConnect: SSHFtp = new SSHFtp()
-//
-//  sftpConnect.send(args(0))
-//
-//
-//
-//  sftpConnect.close()
-//  sshConnect.close()
 
 //  TODO: Uncomment below
 //  val watcher = createWatchDir(syncedDirAbs)
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
+// 10.215.149.8
+  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
+  implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala
   val watcher = new WatchDirScala(syncedDirAbs)
+  watcher.start()
 
-  while(1>0){}
+  while(1 > 0){}
 
+//  sftpConnect.close()
+//  sshConnect.close()
 }
