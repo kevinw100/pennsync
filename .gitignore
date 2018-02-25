@@ -4,4 +4,4 @@ project/target/
 .idea/
 target/
 project/META-INF/
-workspace.xml
+.idea/workspace.xml
