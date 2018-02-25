@@ -1,7 +1,6 @@
 out/
 build/
-project/target/
+**/project
 .idea/
 target/
-*/project/META-INF
-.idea/workspace.xml
+**/META-INF
