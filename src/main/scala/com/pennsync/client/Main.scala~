@@ -1,14 +1,11 @@
 package com.pennsync.client
 
-import com.twitter.finagle.{Http, Service}
-import com.twitter.finagle.http
-import com.twitter.util.{Await, Future}
 import java.nio.file.{Files, Path, Paths}
+
 import net.liftweb.json._
 import com.pennsync.server.Machine
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 import scala.io.StdIn.readLine
-
 /**
   * This is the Client-side main
   */
@@ -67,24 +64,15 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("192.168.0.48", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("10.215.151.112", "pi", "pi")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala
   val watcher = new WatchDirScala(syncedDirAbs)
   watcher.start()
 
-//  val client: Service[http.Request, http.Response] = Http.newService("www.scala-lang.org:80")
-//  val request = http.Request(http.Method.Get, "/")
-//  request.host = "www.scala-lang.org"
-//  val response: Future[http.Response] = client(request)
-//  Await.result(response.onSuccess { rep: http.Response =>
-//    println("GET success: " + rep)
-//  })
-
-
   while({
-    val a = readLine("type q to quit\n")
+    val a = readLine("type q to quit")
     a != null && (a == "q\n" || a == "q")
   }){
     //do nothing

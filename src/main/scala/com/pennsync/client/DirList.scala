@@ -1,6 +1,7 @@
 package com.pennsync.client
 
 import java.io.File
+import java.nio.file.Paths
 import java.time.{Instant, ZoneOffset, ZonedDateTime, format}
 
 import com.pennsync.MetaFile
@@ -17,22 +18,24 @@ object DirList {
       var tempMap = ledgerMap
 
       val subFiles : List[File] = directory.listFiles.filter(_.isFile).toList
+      val baseDir = Paths.get(appRoot)
 
       for (f <- subFiles) {
-        val relativePath = f.getPath.split(appRoot)(1)
-        val lastModified = f.lastModified()
+//        print("Current file being traversed: " + f.toString)
 
-        if (tempMap.contains(relativePath)) {
+        val fileMetaData = MetaFile.getMetaData(baseDir, f)
 
-          tempMap.get(relativePath) match {
-            case Some(oldFileInfo) => if (lastModified > oldFileInfo.lastUpdateLong) {
-              tempMap = tempMap+(relativePath -> MetaFile(relativePath, getUTCTimeString(lastModified), lastModified))
+        if (tempMap.contains(fileMetaData.relativePath)) {
+
+          tempMap.get(fileMetaData.relativePath) match {
+            case Some(oldFileInfo) => if (fileMetaData.lastUpdateLong > oldFileInfo.lastUpdateLong) {
+              tempMap = tempMap+(fileMetaData.relativePath -> fileMetaData)
             }
             case None => println("Should never happen")
           }
 
         } else {
-          tempMap = tempMap+(relativePath -> MetaFile(relativePath, getUTCTimeString(lastModified), lastModified))
+          tempMap = tempMap+(fileMetaData.relativePath -> fileMetaData)
         }
 
       }

@@ -24,10 +24,12 @@ object Client {
 
   def removeFromLedger(meta: MetaFile) : Unit = {
     clientLedger = clientLedger.deleteFileMetadata(meta)
+    clientLedger.write()
   }
 
   def modifyLedgerEntry(meta: MetaFile) : Unit = {
     clientLedger = clientLedger.updateFileMetadata(meta)
+    clientLedger.write()
   }
 
   def ipAddress(): String = {

@@ -4,5 +4,3 @@ build/
 target/
 target/*
 out/*
-project/project/*
-project/target/*
