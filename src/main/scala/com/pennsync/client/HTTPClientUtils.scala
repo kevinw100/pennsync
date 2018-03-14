@@ -1,12 +1,11 @@
 package com.pennsync.client
 
 import com.pennsync.MetaFile
-import com.twitter.finagle.{Http, Service}
-import com.twitter.finagle.http
+import com.twitter.finagle.{Http, Service, ServiceFactory, http}
 import com.twitter.util.{Await, Future}
 import net.liftweb.json.{Formats, Serialization, parse}
-import com.twitter.io.Buf
-import com.twitter.io.Buf.ByteArray
+import com.twitter.conversions.time._
+
 object HTTPClientUtils {
 
   /**
@@ -16,7 +15,12 @@ object HTTPClientUtils {
 
 
   def createRequestAndExecuteRequest(reqData: RequestData)(implicit formats: Formats) : Unit = {
-    val client: Service[http.Request, http.Response] = Http.newService(reqData.hostname ++ reqData.portAsString)
+    //May have to tune these parameters
+    val client: Service[http.Request, http.Response] =
+      Http.client
+        .withSession
+        .acquisitionTimeout(5.seconds)
+        .newService(reqData.hostname ++ ":" ++ reqData.portAsString)
 
     val postRequest = http.Request(http.Method.Post, "/")
     val getRequest = http.Request(http.Method.Get, "/")
@@ -35,7 +39,7 @@ object HTTPClientUtils {
     response.onSuccess(response => println("Successfully received confirmation that data was received"))
   }
 
-  def serializeRequest(reqData: RequestData)(implicit formats: Formats) : String = {
+  private def serializeRequest(reqData: RequestData)(implicit formats: Formats) : String = {
     val serializedString : String = Serialization.write(HTTPRequestWrapper(reqData.data, reqData.reqType))
     serializedString
   }

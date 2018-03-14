@@ -26,7 +26,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
   def handleCreate(file: better.files.File): Unit = {
     val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.addToLedger(fileMetaData)
-    serverConnection.sendFile(fileMetaData, file.toJava)
+    serverConnection.sendFile(fileMetaData, file.toJava, RequestDataFactory.AddFileRequest)
     //TODO: STUB FOR SENDING FILE TO SERVER
   }
 
@@ -34,7 +34,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.modifyLedgerEntry(fileMetaData)
     if (!ClientLedger.isIgnoredFile(fileMetaData.relativePath)) {
-      serverConnection.sendFile(fileMetaData, file.toJava)
+      serverConnection.sendFile(fileMetaData, file.toJava, RequestDataFactory.AddFileRequest)
     }
     // TODO: Send file over to server and do ledger checking
   }

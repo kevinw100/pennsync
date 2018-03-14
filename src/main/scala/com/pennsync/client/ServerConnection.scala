@@ -2,14 +2,15 @@ package com.pennsync.client
 
 import com.pennsync.MetaFile
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
+import net.liftweb.json.Formats
 
 object ServerConnection{
-  def createConnection(options : SSHOptions) : ServerConnection = {
+  def createConnection(options : SSHOptions)(implicit  formats: Formats) : ServerConnection = {
     new ServerConnection(options)
   }
 }
 
-class ServerConnection(options: SSHOptions){
+class ServerConnection(options: SSHOptions)(implicit formats: Formats){
   implicit val ssh: SSH = new SSH(options)
   val sftp: SSHFtp = new SSHFtp()
 
@@ -44,19 +45,25 @@ class ServerConnection(options: SSHOptions){
     }
   }
 
-  def sendFile(metaData: MetaFile, file: java.io.File) : Unit = {
+  def sendFile(metaData: MetaFile, file: java.io.File, reqType: Int) : Unit = {
+    val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
+    HTTPClientUtils.createRequestAndExecuteRequest(requestData)
+
     if(sftp == null) {
       //Do nothing (for testing)
       println("[WARN] SFTP connection is null. @Devs please make sure to hook up the Pi")
       return
     }
+//    val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
+
     val serverPath = mapToServerPath(metaData.relativePath)
     println(serverPath)
+
     createNecessaryDirectories(serverPath)
     // Modify to send javafile .toFile
     sftp.send(file, serverPath)
     println("Finished sending file!")
 
-    //TODO: Send HTTPRequest to tell Server that file has completed sending and Server will then check Client JSON
+//    HTTPClientUtils.createRequestAndExecuteRequest(requestData)
   }
 }
