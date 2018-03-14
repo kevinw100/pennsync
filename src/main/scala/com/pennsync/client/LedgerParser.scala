@@ -30,12 +30,15 @@ object LedgerParser {
     ledgerMap
   }
 
+  def getJsonString(fileList: List[MetaFile])(implicit format: Formats) : String = {
+    Serialization.write(fileList)
+  }
   /**
     * Writes out old ledger file
     * @param fileList
     */
   def writeToClientFile(fileList: List[MetaFile], ledgerPath: String)(implicit format: Formats) : Unit = {
-    val ledgerNewString: String = Serialization.write(fileList)
+    val ledgerNewString: String = getJsonString(fileList)
     //TODO: make this with shadowfiles (in case this ledger write fails)
     new PrintWriter(ledgerPath) { write(ledgerNewString); close }
   }
