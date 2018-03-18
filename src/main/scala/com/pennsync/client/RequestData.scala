@@ -8,14 +8,16 @@ object RequestDataFactory{
   final val PullRequest = 0
   final val TrackRequest = 1
   final val AddFileRequest = 2
-  final val UntrackRequest = 3
-  final val ViewRequest = 4
+  final val ModifyRequest = 3
+  final val UntrackRequest = 4
+  final val ViewRequest = 5
 
   def create(data: List[MetaFile], hostname: String, port: Int, reqType: Int) : RequestData = {
     reqType match {
       case PullRequest => new PullRequest(data, hostname, port)
       case TrackRequest => new TrackRequest(data, hostname, port)
       case AddFileRequest => new AddFileRequest(data, hostname, port)
+      case ModifyRequest => new ModifyRequest(data, hostname, port)
       case UntrackRequest => new UntrackRequest(data, hostname, port)
       case ViewRequest => new ViewRequest(data, hostname, port)
     }
@@ -29,7 +31,7 @@ sealed trait RequestData {
   val data: List[MetaFile]
   val hostname: String
   val port: Int
-  val portAsString : String = ":" ++ port.toString
+  val portAsString : String = port.toString
   val reqType: String
 }
 
@@ -51,4 +53,8 @@ case class ViewRequest(val data: List[MetaFile], val hostname: String, val port:
 
 case class UntrackRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
   val reqType : String = "UNTRACK"
+}
+
+case class ModifyRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
+  val reqType: String = "MODIFY"
 }

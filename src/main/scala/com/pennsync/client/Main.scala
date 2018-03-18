@@ -67,7 +67,7 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("192.168.0.48", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala
@@ -82,13 +82,13 @@ object Main extends App {
 //    println("GET success: " + rep)
 //  })
 
-
-  while({
-    val a = readLine("type q to quit\n")
-    a != null && (a == "q\n" || a == "q")
-  }){
-    //do nothing
+  var a = ""
+  do{
+    a = readLine("type q to quit\n")
+    println("received: " ++ a)
   }
+  while(a != null && (a == "q\n" || a == "q"))
+
   System.exit(0)
 //  sftpConnect.close()
 //  sshConnect.close()

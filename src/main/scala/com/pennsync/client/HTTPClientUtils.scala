@@ -16,6 +16,7 @@ object HTTPClientUtils {
 
   def createRequestAndExecuteRequest(reqData: RequestData)(implicit formats: Formats) : Unit = {
     //May have to tune these parameters
+    print(s"sending data to ${reqData.hostname ++ ":" ++ reqData.portAsString}")
     val client: Service[http.Request, http.Response] =
       Http.client
         .withSession
