@@ -45,6 +45,10 @@ case class AddFileRequest(val data: List[MetaFile], val hostname: String, val po
   val reqType : String = "ADD_FILE"
 }
 
+case class ModifyFileRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
+  val reqType : String = "MODIFY_FILE"
+}
+
 case class ViewRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
   val reqType : String = "VIEW"
 }
