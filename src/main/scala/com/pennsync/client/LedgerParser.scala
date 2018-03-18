@@ -5,7 +5,6 @@ import java.nio.file.{Files, Path, Paths}
 
 import com.pennsync.MetaFile
 import net.liftweb.json.{Formats, Serialization, parse}
-import com.pennsync.server.Machine
 
 /**
   * Usage: utility functions to parse in ledger files
@@ -41,17 +40,6 @@ object LedgerParser {
     val ledgerNewString: String = getJsonString(fileList)
     //TODO: make this with shadowfiles (in case this ledger write fails)
     new PrintWriter(ledgerPath) { write(ledgerNewString); close }
-  }
-
-  /**
-    * REFACTOR to remove machine
-    * @param ledger
-    * @param ledgerPath
-    * @param format
-    */
-  def writeToServerFile(ledger: Map[String, (MetaFile, Set[Machine])], ledgerPath : String)(implicit format: Formats) : Unit = {
-    val jsonString: String = Serialization.write(ledger)
-    new PrintWriter("server_ledger.json"){write(jsonString); close}
   }
 
   /**

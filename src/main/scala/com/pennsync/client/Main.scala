@@ -5,7 +5,6 @@ import com.twitter.finagle.http
 import com.twitter.util.{Await, Future}
 import java.nio.file.{Files, Path, Paths}
 import net.liftweb.json._
-import com.pennsync.server.Machine
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 import scala.io.StdIn.readLine
 
@@ -52,8 +51,6 @@ object Main extends App {
   implicit val formats : Formats = DefaultFormats
 
   val clientLedger = ClientLedger.create(ledgerPath, syncedDirAbs)
-  //Used as a dummy value
-  val clientMachine: Machine = Machine(0, "some_default_ip")
 
   Client.setClientLedger(clientLedger)
 

@@ -8,7 +8,7 @@ object RequestDataFactory{
   final val PullRequest = 0
   final val TrackRequest = 1
   final val AddFileRequest = 2
-  final val ModifyRequest = 3
+  final val ModifyFileRequest = 3
   final val UntrackRequest = 4
   final val ViewRequest = 5
 
@@ -17,7 +17,7 @@ object RequestDataFactory{
       case PullRequest => new PullRequest(data, hostname, port)
       case TrackRequest => new TrackRequest(data, hostname, port)
       case AddFileRequest => new AddFileRequest(data, hostname, port)
-      case ModifyRequest => new ModifyRequest(data, hostname, port)
+      case ModifyFileRequest => new ModifyFileRequest(data, hostname, port)
       case UntrackRequest => new UntrackRequest(data, hostname, port)
       case ViewRequest => new ViewRequest(data, hostname, port)
     }
@@ -57,8 +57,4 @@ case class ViewRequest(val data: List[MetaFile], val hostname: String, val port:
 
 case class UntrackRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
   val reqType : String = "UNTRACK"
-}
-
-case class ModifyRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
-  val reqType: String = "MODIFY"
 }

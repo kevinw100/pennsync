@@ -30,6 +30,7 @@ object HTTPClientUtils {
       case _ : TrackRequest => getRequest
       case _ : ViewRequest => getRequest
       case _ : AddFileRequest => postRequest
+      case _ : ModifyFileRequest => postRequest
       case _ : UntrackRequest => postRequest
       case _ : PullRequest => getRequest
     }
