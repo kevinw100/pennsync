@@ -37,11 +37,7 @@ case class ClientLedger(pathsToMetadata: Map[String, MetaFile], ledgerPath: Stri
   }
 
   def updateFileMetadata(metaData: MetaFile) : ClientLedger = {
-    if(!pathsToMetadata.contains(metaData.relativePath)){
-      println(s"Error: Request to update a non-existing metadata file, doing no updates (or an update to ledger file), ${metaData.relativePath}")
-      this
-    }
-    else if(ClientLedger.isIgnoredFile(metaData.relativePath)){
+    if(ClientLedger.isIgnoredFile(metaData.relativePath)){
       println("Found a file that is being ignored!")
       this
     }

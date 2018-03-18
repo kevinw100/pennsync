@@ -12,6 +12,11 @@ object ServerConnection{
   }
 }
 
+/**
+  * Class used to interface with the server
+  * @param options
+  * @param formats
+  */
 class ServerConnection(options: SSHOptions)(implicit formats: Formats){
   implicit val ssh: SSH = null //new SSH(options)
   val sftp: SSHFtp = null //new SSHFtp()
@@ -86,7 +91,18 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     files
   }
 
+  def pullServerChanges(clientLedger: ClientLedger): Unit = {
+    if(!isConnected()) return
 
+    val requestData = RequestDataFactory.create(clientLedger.fileMetaData, options.host, 8080, RequestDataFactory.PullRequest)
+    val result: Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
+
+    var files = List[MetaFile]()
+    result.onSuccess(response =>
+      files = LedgerParser.parseJsonString(response.contentString)
+    )
+    receiveFiles(files)
+  }
 
   def sendFile(metaData: MetaFile, file: java.io.File, reqType: Int) : Unit = {
     if(!isConnected()){
@@ -103,5 +119,12 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
 
     val result : Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
     result.onSuccess(_ => println("Server received files successfully!"))
+  }
+
+  private def receiveFiles(filePaths: List[MetaFile]): Unit = {
+    filePaths.foreach { case metaFile =>
+      sftp.receive(metaFile.relativePath)
+      Client.modifyLedgerEntry(metaFile)
+    }
   }
 }

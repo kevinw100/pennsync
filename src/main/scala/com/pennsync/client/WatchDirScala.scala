@@ -34,13 +34,11 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     if (!ClientLedger.isIgnoredFile(fileMetaData.relativePath)) {
       serverConnection.sendFile(fileMetaData, file.toJava, RequestDataFactory.ModifyFileRequest)
     }
-    // TODO: Send file over to server and do ledger checking
   }
 
   def handleDelete(file: better.files.File) : Unit = {
     val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.removeFromLedger(fileMetaData)
-    //TODO: Send untrack command to the server
     serverConnection.sendUntrackRequest(fileMetaData)
   }
 
