@@ -43,6 +43,12 @@ object LedgerParser {
     new PrintWriter(ledgerPath) { write(ledgerNewString); close }
   }
 
+  /**
+    * REFACTOR to remove machine
+    * @param ledger
+    * @param ledgerPath
+    * @param format
+    */
   def writeToServerFile(ledger: Map[String, (MetaFile, Set[Machine])], ledgerPath : String)(implicit format: Formats) : Unit = {
     val jsonString: String = Serialization.write(ledger)
     new PrintWriter("server_ledger.json"){write(jsonString); close}
