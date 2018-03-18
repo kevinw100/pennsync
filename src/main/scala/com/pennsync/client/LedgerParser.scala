@@ -23,14 +23,17 @@ object LedgerParser {
       LedgerParser.writeToClientFile(List(), ledgerPath)
     }
     val ledgerString = scala.io.Source.fromFile(ledgerPath).mkString
-    val ledgerJson = parse(ledgerString)
-    val ledgerList: List[MetaFile] = ledgerJson.extract[List[MetaFile]]
+    val ledgerList: List[MetaFile] = parseJsonString(ledgerString)
     val ledgerMap = ledgerList.map { case x: MetaFile => (x.relativePath, x) }.toMap
     ledgerMap
   }
 
   def getJsonString(fileList: List[MetaFile])(implicit format: Formats) : String = {
     Serialization.write(fileList)
+  }
+
+  def parseJsonString(jsonString: String)(implicit format: Formats) : List[MetaFile] = {
+    parse(jsonString).extract[List[MetaFile]]
   }
   /**
     * Writes out old ledger file

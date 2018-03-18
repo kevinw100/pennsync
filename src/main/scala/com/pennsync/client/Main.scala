@@ -81,12 +81,22 @@ object Main extends App {
 
   var a = ""
   do{
-    a = readLine("type q to quit\n")
+    a = readLine("type q to quit, v to view server files, t [filename] to track a file, p to pull file changes from the server\n")
     println("received: " ++ a)
+    if(a.toLowerCase() == "v" || a.toLowerCase() =="view"){
+      val serverFiles = conn.viewServerFiles()
+      println(serverFiles)
+    }
+    if(a.split(" "){0}.toLowerCase == "t"){
+      //TODO: Add track here!
+      println("TODO: Add track here!")
+    }
+    if(a.toLowerCase == "p" || a.toLowerCase == "pull"){
+      //TODO: Add pull here!
+      println("TODO: add pull here!")
+    }
   }
-  while(a != null && (a == "q\n" || a == "q"))
+  while(a != "q")
 
   System.exit(0)
-//  sftpConnect.close()
-//  sshConnect.close()
 }

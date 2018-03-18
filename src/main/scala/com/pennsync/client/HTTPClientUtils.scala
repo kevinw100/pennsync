@@ -14,7 +14,7 @@ object HTTPClientUtils {
   case class HTTPRequestWrapper(data: List[MetaFile], reqType: String)
 
 
-  def createRequestAndExecuteRequest(reqData: RequestData)(implicit formats: Formats) : Unit = {
+  def createRequestAndExecuteRequest(reqData: RequestData)(implicit formats: Formats) : Future[http.Response] = {
     //May have to tune these parameters
     print(s"sending data to ${reqData.hostname ++ ":" ++ reqData.portAsString}")
     val client: Service[http.Request, http.Response] =
@@ -38,11 +38,13 @@ object HTTPClientUtils {
     request.contentString_=(serializeRequest(reqData))
     request.host = reqData.hostname
     val response : Future[http.Response] = client(request)
-    response.onSuccess(response => println("Successfully received confirmation that data was received"))
+    response
   }
 
   private def serializeRequest(reqData: RequestData)(implicit formats: Formats) : String = {
     val serializedString : String = Serialization.write(HTTPRequestWrapper(reqData.data, reqData.reqType))
     serializedString
   }
+
+
 }

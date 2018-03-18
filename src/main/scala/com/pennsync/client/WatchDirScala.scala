@@ -32,7 +32,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.modifyLedgerEntry(fileMetaData)
     if (!ClientLedger.isIgnoredFile(fileMetaData.relativePath)) {
-      serverConnection.sendFile(fileMetaData, file.toJava, RequestDataFactory.ModifyRequest)
+      serverConnection.sendFile(fileMetaData, file.toJava, RequestDataFactory.ModifyFileRequest)
     }
     // TODO: Send file over to server and do ledger checking
   }
@@ -41,6 +41,7 @@ class WatchDirScala(baseDir: Path)(implicit serverConnection: ServerConnection){
     val fileMetaData = MetaFile.getMetaData(baseDir, file.toJava)
     Client.removeFromLedger(fileMetaData)
     //TODO: Send untrack command to the server
+    serverConnection.sendUntrackRequest(fileMetaData)
   }
 
   val watcher = new RecursiveFileMonitor(watchDir) {
