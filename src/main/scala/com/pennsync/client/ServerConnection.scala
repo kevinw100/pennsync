@@ -46,15 +46,13 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
   }
 
   def sendFile(metaData: MetaFile, file: java.io.File, reqType: Int) : Unit = {
-    val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
-    HTTPClientUtils.createRequestAndExecuteRequest(requestData)
 
     if(sftp == null) {
       //Do nothing (for testing)
       println("[WARN] SFTP connection is null. @Devs please make sure to hook up the Pi")
       return
     }
-//    val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
+    val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
 
     val serverPath = mapToServerPath(metaData.relativePath)
     println(serverPath)
@@ -64,6 +62,6 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     sftp.send(file, serverPath)
     println("Finished sending file!")
 
-//    HTTPClientUtils.createRequestAndExecuteRequest(requestData)
+    HTTPClientUtils.createRequestAndExecuteRequest(requestData)
   }
 }
