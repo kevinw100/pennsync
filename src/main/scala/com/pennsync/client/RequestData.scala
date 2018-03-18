@@ -29,7 +29,7 @@ sealed trait RequestData {
   val data: List[MetaFile]
   val hostname: String
   val port: Int
-  val portAsString : String = ":" ++ port.toString
+  val portAsString : String = port.toString
   val reqType: String
 }
 
