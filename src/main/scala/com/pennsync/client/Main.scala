@@ -64,7 +64,7 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("10.103.207.197", "pi", "pi")
+  val sshOpt: SSHOptions = SSHOptions("165.123.203.63", "kevin")
   implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
 
 // TODO: Testing WatchDirScala
@@ -88,12 +88,10 @@ object Main extends App {
       println(serverFiles)
     }
     if(a.split(" "){0}.toLowerCase == "t"){
-      //TODO: Add track here!
-      println("TODO: Add track here!")
+      conn.trackNewServerFile(a.split(" ").drop(1).toList)
     }
     if(a.toLowerCase == "p" || a.toLowerCase == "pull"){
-      //TODO: Add pull here!
-      println("TODO: add pull here!")
+      conn.pullServerChanges(Client.clientLedger)
     }
   }
   while(a != "q")

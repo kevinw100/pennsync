@@ -8,12 +8,6 @@ import com.twitter.conversions.time._
 
 object HTTPClientUtils {
 
-  /**
-    * Wraps RequestData so it omits host + port info
-    */
-  case class HTTPRequestWrapper(data: List[MetaFile], reqType: String)
-
-
   def createRequestAndExecuteRequest(reqData: RequestData)(implicit formats: Formats) : Future[http.Response] = {
     //May have to tune these parameters
     print(s"sending data to ${reqData.hostname ++ ":" ++ reqData.portAsString}")
@@ -46,5 +40,9 @@ object HTTPClientUtils {
     serializedString
   }
 
+  /**
+    * Wraps RequestData so it omits host + port info
+    */
+  case class HTTPRequestWrapper(data: List[MetaFile], reqType: String)
 
 }

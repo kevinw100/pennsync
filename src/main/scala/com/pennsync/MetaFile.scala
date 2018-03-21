@@ -16,5 +16,5 @@ object MetaFile {
 }
 case class MetaFile (relativePath: String, lastUpdateString: String, lastUpdateLong: Long){
   //For pretty-printing
-  override def toString: String = s"relativePath: $relativePath\nlastUpdateString: $lastUpdateString\nlastUpdateLong: $lastUpdateLong\n"
+  override def toString: String = s"\nrelativePath: $relativePath\nlastUpdateString: $lastUpdateString\nlastUpdateLong: $lastUpdateLong\n\n"
 }
