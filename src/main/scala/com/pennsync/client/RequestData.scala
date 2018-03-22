@@ -11,6 +11,7 @@ object RequestDataFactory{
   final val ModifyFileRequest = 3
   final val UntrackRequest = 4
   final val ViewRequest = 5
+  final val PennsyncDirRequest = 6
 
   def create(data: List[MetaFile], hostname: String, port: Int, reqType: Int) : RequestData = {
     reqType match {
@@ -20,6 +21,7 @@ object RequestDataFactory{
       case ModifyFileRequest => new ModifyFileRequest(data, hostname, port)
       case UntrackRequest => new UntrackRequest(data, hostname, port)
       case ViewRequest => new ViewRequest(data, hostname, port)
+      case PennsyncDirRequest => new PennsyncDirRequest(data, hostname, port)
     }
   }
 }
@@ -57,4 +59,8 @@ case class ViewRequest(val data: List[MetaFile], val hostname: String, val port:
 
 case class UntrackRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
   val reqType : String = "UNTRACK"
+}
+
+case class PennsyncDirRequest(val data: List[MetaFile], val hostname: String, val port: Int) extends RequestData {
+  val reqType : String = "PENNSYNC_DIR"
 }

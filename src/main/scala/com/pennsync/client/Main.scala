@@ -64,31 +64,24 @@ object Main extends App {
 //  watcher.processEvents(syncedDirAbs, clientLedger)
 //  watcher.processEvents()
 // 10.215.149.8
-  val sshOpt: SSHOptions = SSHOptions("165.123.203.63", "kevin")
-  implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt)
+  val sshOpt: SSHOptions = SSHOptions("165.123.201.204", "kevin")
+  implicit val conn : ServerConnection = ServerConnection.createConnection(sshOpt, syncedDirAbs)
 
 // TODO: Testing WatchDirScala
-  val watcher = new WatchDirScala(syncedDirAbs)
+  val watcher = WatchDirScala.create(syncedDirAbs)
   watcher.start()
-
-//  val client: Service[http.Request, http.Response] = Http.newService("www.scala-lang.org:80")
-//  val request = http.Request(http.Method.Get, "/")
-//  request.host = "www.scala-lang.org"
-//  val response: Future[http.Response] = client(request)
-//  Await.result(response.onSuccess { rep: http.Response =>
-//    println("GET success: " + rep)
-//  })
 
   var a = ""
   do{
     a = readLine("type q to quit, v to view server files, t [filename] to track a file, p to pull file changes from the server\n")
     println("received: " ++ a)
     if(a.toLowerCase() == "v" || a.toLowerCase() =="view"){
-      val serverFiles = conn.viewServerFiles()
+      val serverFiles = conn.viewServerFiles(Client.clientLedger)
       println(serverFiles)
     }
     if(a.split(" "){0}.toLowerCase == "t"){
       conn.trackNewServerFile(a.split(" ").drop(1).toList)
+
     }
     if(a.toLowerCase == "p" || a.toLowerCase == "pull"){
       conn.pullServerChanges(Client.clientLedger)

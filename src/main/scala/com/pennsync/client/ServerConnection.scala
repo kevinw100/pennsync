@@ -1,14 +1,17 @@
 package com.pennsync.client
 
+import java.nio.file.{Path, Paths}
+
 import com.pennsync.MetaFile
 import com.twitter.finagle.http
 import com.twitter.util.{Await, Future}
 import fr.janalyse.ssh.{SSH, SSHFtp, SSHOptions}
 import net.liftweb.json.Formats
+import com.jcraft.jsch.SftpException
 
 object ServerConnection{
-  def createConnection(options : SSHOptions)(implicit  formats: Formats) : ServerConnection = {
-    new ServerConnection(options)
+  def createConnection(options : SSHOptions, syncDir: Path)(implicit  formats: Formats) : ServerConnection = {
+    new ServerConnection(options, syncDir)
   }
 }
 
@@ -17,7 +20,7 @@ object ServerConnection{
   * @param options
   * @param formats
   */
-class ServerConnection(options: SSHOptions)(implicit formats: Formats){
+class ServerConnection(options: SSHOptions, syncDir: Path)(implicit formats: Formats){
   implicit val ssh: SSH = new SSH(options)
   val sftp: SSHFtp = new SSHFtp()
 
@@ -31,7 +34,15 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     else true
   }
 
-  def mapToServerPath(relPath: String) : String = {
+  /**
+    * Asks server absolute path to PennSync directory (also requires proper sync dir)
+    */
+  private def getPennsyncDir(): String = {
+    val reqData = RequestDataFactory.create(List(), options.host, 8080, RequestDataFactory.PennsyncDirRequest)
+    Await.result(HTTPClientUtils.createRequestAndExecuteRequest(reqData)).contentString
+  }
+
+  def mapToServerPending(relPath: String) : String = {
     //TODO: Use nio paths to properly augment
     "pending/" ++ relPath
   }
@@ -41,7 +52,6 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     val pathAsSections : Vector[String] = relPath.split("/").toVector
     val dirList : Vector[String] = pathAsSections.dropRight(1)
 
-    println(s"dirlist: $dirList")
     //If dirList is nonempty take the first term to avoid adding an extraneous "/"
     var currPath = ""
     for(dir <- dirList){
@@ -51,13 +61,8 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
       else{
         currPath = currPath ++ "/" ++ dir
       }
-      println(s"current dir being checked: $currPath")
       if(!ssh.isDirectory(currPath)){
         ssh.mkdir(currPath)
-        println(s"Created directory: $currPath")
-      }
-      else{
-        println(s"found a directory: $currPath")
       }
     }
   }
@@ -72,14 +77,16 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
   }
 
   /**
-    *
+    * Handles tracking of server metafiles
     * @param relPaths paths to send to server
     */
   def trackNewServerFile(relPaths: List[String]) : Unit = {
     if(!isConnected()){
       return
     }
-
+    // Base Directory of Pennsync (default is user.home)
+    val serverDir = getPennsyncDir()
+    println(s"server dir is: $serverDir")
     // Create dummy metafiles to send in request
     val metaFiles = relPaths.map(relPath => MetaFile(relPath, "", 0))
 
@@ -88,9 +95,10 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
 
     var serverMetaFiles: List[MetaFile] = List[MetaFile]()
     result.onSuccess { case response =>
+      println("received a response from the server")
       serverMetaFiles = LedgerParser.parseJsonString(response.contentString)
-      receiveFiles(serverMetaFiles)
-      println(s"Received serverfiles: $serverMetaFiles")
+      println(s"was serverMetaFiles set correctly?: $serverMetaFiles")
+      receiveFiles(serverDir, serverMetaFiles)
     }
 
   }
@@ -99,12 +107,12 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     * Sends a VIEW request to the server and parses content string into a List[MetaFile]
     * @return List[MetaFile]
     */
-  def viewServerFiles() : List[MetaFile] = {
+  def viewServerFiles(clientLedger: ClientLedger) : List[MetaFile] = {
     if(!isConnected()){
       return List[MetaFile]()
     }
 
-    val requestData : RequestData = RequestDataFactory.create(List(), options.host, 8080, RequestDataFactory.ViewRequest)
+    val requestData : RequestData = RequestDataFactory.create(clientLedger.fileMetaData, options.host, 8080, RequestDataFactory.ViewRequest)
     val result : Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
     val response = Await.result(result)
     LedgerParser.parseJsonString(response.contentString)
@@ -113,14 +121,15 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
   def pullServerChanges(clientLedger: ClientLedger): Unit = {
     if(!isConnected()) return
 
+    val serverBaseDir = getPennsyncDir()
+
     val requestData = RequestDataFactory.create(clientLedger.fileMetaData, options.host, 8080, RequestDataFactory.PullRequest)
     val result: Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
 
     var files = List[MetaFile]()
     result.onSuccess { case response =>
       files = LedgerParser.parseJsonString(response.contentString)
-      println(s"files: $files")
-      receiveFiles(files)
+      receiveFiles(serverBaseDir, files)
       println("Finished!!")
     }
   }
@@ -129,24 +138,43 @@ class ServerConnection(options: SSHOptions)(implicit formats: Formats){
     if(!isConnected()){
       return
     }
-
     val requestData : RequestData = RequestDataFactory.create(List(metaData), options.host, 8080, reqType)
-
-    val serverPath = mapToServerPath(metaData.relativePath)
+    val serverPath = mapToServerPending(metaData.relativePath)
     createNecessaryDirectories(serverPath)
 
     // Modify to send javafile .toFile
-    sftp.send(file, serverPath)
-
-    val result : Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
-    result.onSuccess(_ => println("Server received files successfully!"))
-    result.onFailure(_ => println("Server did not receive files :("))
+    try{
+      sftp.send(file, serverPath)
+      val result : Future[http.Response] = HTTPClientUtils.createRequestAndExecuteRequest(requestData)
+      result.onSuccess(_ => println("Server received files successfully!"))
+      result.onFailure(_ => println("Server did not receive files :("))
+    }
+    catch {
+      //Probably didn't have correct privileges
+      case e: SftpException => e.printStackTrace()
+    }
   }
 
-  private def receiveFiles(filePaths: List[MetaFile]): Unit = {
+  private def receiveFiles(serverBaseDir: String, filePaths: List[MetaFile]): Unit = {
+    println("hit receiveFiles!")
+    println("pausing watcher:")
+    WatchDirScala.pauseWatcher()
     filePaths.foreach { case metaFile =>
-      sftp.receive(metaFile.relativePath)
+      val serverFilePath = Paths.get(serverBaseDir)
+        .resolve(Paths.get("pennsync/"))
+        .resolve(Paths.get(metaFile.relativePath))
+        .toString
+
+      println(s"serverFilePath is: $serverFilePath")
+
+
+      val clientPathFullPath = syncDir.resolve(Paths.get(metaFile.relativePath))
+
+      sftp.receive(serverFilePath, clientPathFullPath.toString)
+
       Client.modifyLedgerEntry(metaFile)
     }
+    println("Restarting watcher: ")
+    WatchDirScala.startWacher()
   }
 }

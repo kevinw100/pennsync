@@ -27,6 +27,7 @@ object HTTPClientUtils {
       case _ : ModifyFileRequest => postRequest
       case _ : UntrackRequest => postRequest
       case _ : PullRequest => getRequest
+      case _ : PennsyncDirRequest => getRequest
     }
     request.charset_=("UTF_8")
     request.contentString_=(serializeRequest(reqData))
