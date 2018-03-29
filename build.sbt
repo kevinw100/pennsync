@@ -15,6 +15,11 @@ libraryDependencies ++= Seq(
 
 mainClass in assembly := Some("com.pennsync.client.Main")
 
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs @ _*) => MergeStrategy.discard
+  case x => MergeStrategy.first
+}
+
 fork in run := true
 outputStrategy := Some(StdoutOutput)
 connectInput in run := true
